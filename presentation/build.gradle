@@ -39,30 +39,20 @@ android {
         // versionNameSuffix '-beta'
     }
 
-    signingConfigs {
-        release {
-            def keystoreProps = new Properties()
-            def keystorePropsFile = rootProject.file('./.gradle/.gradlerc')
-            storeFile file('./my-release-key.keystore')
-            keyAlias 'quik_release'
-            if (keystorePropsFile.exists()) {
-                keystoreProps.load(new FileInputStream(keystorePropsFile))
-            } else if (System.getenv("CI") == "true") {
-//                do nothing
-            } else {
-                throw new GradleException("Keystore properties file not found.")
-            }
-            storePassword keystoreProps['storePassword']
-            keyPassword keystoreProps['keyPassword']
-        }
-    }
+
 
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+            resValue("string", "app_name", "QUIK-Debug")
+
         }
     }
 
@@ -79,7 +69,6 @@ android {
     productFlavors {
         withAnalytics { dimension "analytics" }
         noAnalytics {
-            signingConfig signingConfigs.release
         }
     }
     lint {
