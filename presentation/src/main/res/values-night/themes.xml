@@ -43,6 +43,8 @@
         <item name="switchTrackEnabled">@color/switchTrackEnabledDark</item>
         <item name="switchTrackDisabled">@color/switchTrackDisabledDark</item>
         <item name="windowActionBar">false</item>
+        <item name="background">@color/backgroundDark</item>
+
     </style>
 
     <style name="AppThemeDialog" parent="Theme.AppCompat.Dialog">

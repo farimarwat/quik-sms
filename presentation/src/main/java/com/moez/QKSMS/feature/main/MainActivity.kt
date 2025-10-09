@@ -146,9 +146,12 @@ class MainActivity : QkThemedActivity(), MainView {
         }
 
         toggle.syncState()
-        toolbar.setNavigationOnClickListener {
-            dismissKeyboard()
-            homeIntent.onNext(Unit)
+        toggle.isDrawerIndicatorEnabled = false
+        if(toggle.isDrawerIndicatorEnabled){
+            toolbar.setNavigationOnClickListener {
+                dismissKeyboard()
+                homeIntent.onNext(Unit)
+            }
         }
 
         itemTouchCallback.adapter = conversationsAdapter
@@ -224,9 +227,10 @@ class MainActivity : QkThemedActivity(), MainView {
             else -> 0
         }
 
-        toolbarSearch.setVisible(state.page is Inbox && state.page.selected == 0 || state.page is Searching)
+        toolbarSearch.setVisible( state.page is Searching)
         toolbarTitle.setVisible(toolbarSearch.visibility != View.VISIBLE)
 
+        toolbar.menu.findItem(R.id.main_menu_search)?.isVisible = state.page is Inbox || state.page is Archived
         toolbar.menu.findItem(R.id.select_all)?.isVisible = (conversationsAdapter.itemCount > 1) && selectedConversations != 0
         toolbar.menu.findItem(R.id.archive)?.isVisible = state.page is Inbox && selectedConversations != 0
         toolbar.menu.findItem(R.id.unarchive)?.isVisible = state.page is Archived && selectedConversations != 0
@@ -253,7 +257,7 @@ class MainActivity : QkThemedActivity(), MainView {
         when (state.page) {
             is Inbox -> {
                 showBackButton(state.page.selected > 0)
-                title = getString(R.string.main_title_selected, state.page.selected)
+                title = if(state.page.selected > 0) getString(R.string.main_title_selected, state.page.selected) else getString(R.string.title)
                 if (recyclerView.adapter !== conversationsAdapter) recyclerView.adapter = conversationsAdapter
                 conversationsAdapter.updateData(state.page.data)
                 itemTouchHelper.attachToRecyclerView(recyclerView)

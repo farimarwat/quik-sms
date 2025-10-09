@@ -57,6 +57,7 @@
         <activity
             android:name=".feature.main.MainActivity"
             android:exported="true"
+            android:theme="@style/AppBaseTheme"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

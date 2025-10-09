@@ -565,4 +565,6 @@
     <string name="messageLinkHandling_dialog_negative">No</string>
     <string name="stt_toast_no_provider">No speech-to-text service available</string>
     <string name="stt_toast_extra_prompt">Speak your message</string>
+    <string name="title">Messages</string>
+    <string name="main_menu_search">Search</string>
 </resources>
