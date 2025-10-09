@@ -21,14 +21,16 @@
     android:color="@color/rippleLight">
 
     <item android:id="@android:id/mask">
-        <shape android:shape="oval">
-            <solid android:color="@color/white" />
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp"/>
+            <solid android:color="@color/backgroundFab" />
         </shape>
     </item>
 
     <item>
-        <shape android:shape="oval">
-            <solid android:color="@color/white" />
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp"/>
+            <solid android:color="@color/backgroundFab" />
         </shape>
     </item>
 
