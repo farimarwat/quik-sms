@@ -80,6 +80,10 @@ android {
         signingConfigs.release.keyAlias = System.getenv("key_alias")
         signingConfigs.release.keyPassword = System.getenv("key_password")
     }
+
+    buildFeatures{
+        viewBinding = true
+    }
 }
 
 androidExtensions {
