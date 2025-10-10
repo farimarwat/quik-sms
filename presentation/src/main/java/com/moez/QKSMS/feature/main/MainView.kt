@@ -22,6 +22,7 @@ import android.content.Intent
 import dev.octoshrimpy.quik.common.base.QkView
 import dev.octoshrimpy.quik.manager.ChangelogManager
 import io.reactivex.Observable
+import io.reactivex.subjects.Subject
 
 interface MainView : QkView<MainState> {
 
@@ -44,6 +45,8 @@ interface MainView : QkView<MainState> {
     val undoArchiveIntent: Observable<Unit>
     val snackbarButtonIntent: Observable<Unit>
 
+    val mainMenuIntent: Observable<Unit>
+
     fun requestDefaultSms()
     fun requestPermissions()
     fun clearSearch()
@@ -55,6 +58,7 @@ interface MainView : QkView<MainState> {
     fun showRenameDialog(conversationName: String)
     fun showChangelog(changelog: ChangelogManager.CumulativeChangelog)
     fun showArchivedSnackbar(countConversationsArchived: Int)
+    fun showMainMenu()
 
 }
 

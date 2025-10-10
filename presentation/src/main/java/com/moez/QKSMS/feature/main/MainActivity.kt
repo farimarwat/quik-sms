@@ -31,6 +31,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewStub
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
@@ -41,6 +42,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.textChanges
+import com.moez.QKSMS.feature.main.MenuBottomSheet
+import com.uber.autodispose.android.lifecycle.autoDisposable
 import dev.octoshrimpy.quik.R
 import dev.octoshrimpy.quik.common.Navigator
 import dev.octoshrimpy.quik.common.androidxcompat.drawerOpen
@@ -62,6 +65,7 @@ import com.uber.autodispose.android.lifecycle.scope
 import com.uber.autodispose.autoDisposable
 import dagger.android.AndroidInjection
 import dev.octoshrimpy.quik.common.widget.TextInputDialog
+import dev.octoshrimpy.quik.databinding.MainActivityBinding
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
@@ -74,6 +78,7 @@ import javax.inject.Inject
 
 class MainActivity : QkThemedActivity(), MainView {
 
+    private val bindingMainActivity: MainActivityBinding by lazy { MainActivityBinding.inflate(layoutInflater) }
     @Inject lateinit var blockingDialog: BlockingDialog
     @Inject lateinit var disposables: CompositeDisposable
     @Inject lateinit var navigator: Navigator
@@ -82,6 +87,10 @@ class MainActivity : QkThemedActivity(), MainView {
     @Inject lateinit var searchAdapter: SearchAdapter
     @Inject lateinit var itemTouchCallback: ConversationItemTouchCallback
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+
+
+    //Views
+    private val toolbar get() = bindingMainActivity.toolbar
 
     override val onNewIntentIntent: Subject<Intent> = PublishSubject.create()
     override val activityResumedIntent: Subject<Boolean> = PublishSubject.create()
@@ -118,8 +127,10 @@ class MainActivity : QkThemedActivity(), MainView {
     override val undoArchiveIntent: Subject<Unit> = PublishSubject.create()
     override val snackbarButtonIntent: Subject<Unit> = PublishSubject.create()
 
+    override val mainMenuIntent: Subject<Unit> = PublishSubject.create()
+
     private val viewModel by lazy { ViewModelProviders.of(this, viewModelFactory)[MainViewModel::class.java] }
-    private val toggle by lazy { ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.main_drawer_open_cd, 0) }
+    private val toggle by lazy { ActionBarDrawerToggle(this, bindingMainActivity.drawerLayout, toolbar, R.string.main_drawer_open_cd, 0) }
     private val itemTouchHelper by lazy { ItemTouchHelper(itemTouchCallback) }
     private val progressAnimator by lazy { ObjectAnimator.ofInt(syncingProgress, "progress", 0, 0) }
     private val changelogDialog by lazy { ChangelogDialog(this) }
@@ -127,10 +138,12 @@ class MainActivity : QkThemedActivity(), MainView {
     private val syncing by lazy { findViewById<View>(R.id.syncing) }
     private val backPressedSubject: Subject<NavItem> = PublishSubject.create()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+        setContentView(bindingMainActivity.root)
+        setSupportActionBar(toolbar)
         viewModel.bindView(this)
         onNewIntentIntent.onNext(intent)
 
@@ -144,14 +157,7 @@ class MainActivity : QkThemedActivity(), MainView {
             syncingProgress?.progressTintList = ColorStateList.valueOf(theme.blockingFirst().theme)
             syncingProgress?.indeterminateTintList = ColorStateList.valueOf(theme.blockingFirst().theme)
         }
-
         toggle.syncState()
-        if(toggle.isDrawerIndicatorEnabled){
-            toolbar.setNavigationOnClickListener {
-                dismissKeyboard()
-                homeIntent.onNext(Unit)
-            }
-        }
 
         itemTouchCallback.adapter = conversationsAdapter
         conversationsAdapter.autoScrollToStart(recyclerView)
@@ -189,6 +195,10 @@ class MainActivity : QkThemedActivity(), MainView {
                     //compose.setTint(theme.textPrimary)
                     //compose.setBackgroundTint(theme.theme)
                 }
+        bindingMainActivity
+            .btnMenu.setOnClickListener {
+                mainMenuIntent.onNext(Unit)
+            }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -354,9 +364,14 @@ class MainActivity : QkThemedActivity(), MainView {
 
     override fun showBackButton(show: Boolean) {
         if (show) {
-            toggle.isDrawerIndicatorEnabled = true   // enable toggle (shows hamburger/back arrow)
+            toolbar.setNavigationOnClickListener {
+                dismissKeyboard()
+                homeIntent.onNext(Unit)
+            }
+            toggle.isDrawerIndicatorEnabled = true
         } else {
-            toggle.isDrawerIndicatorEnabled = false   // disable toggle
+            toolbar.setNavigationOnClickListener(null)
+            toggle.isDrawerIndicatorEnabled = false
         }
 
         toggle.onDrawerSlide(drawer, if (show) 1f else 0f)
@@ -453,6 +468,15 @@ class MainActivity : QkThemedActivity(), MainView {
 
     override fun onBackPressed() {
         backPressedSubject.onNext(NavItem.BACK)
+    }
+
+    override fun showMainMenu() {
+        val mainMenuBottomSheet: MenuBottomSheet by lazy {
+            MenuBottomSheet{
+
+            }
+        }
+        mainMenuBottomSheet.show(supportFragmentManager, MenuBottomSheet.Constants.TAG)
     }
 
 }

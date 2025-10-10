@@ -99,6 +99,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/bottom"
+            android:paddingVertical="8dp"
+            android:paddingStart="8dp"
             >
             <com.moez.QKSMS.common.widget.IconButton
                 android:id="@+id/btnMenu"

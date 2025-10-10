@@ -19,6 +19,8 @@
 package dev.octoshrimpy.quik.feature.main
 
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.moez.QKSMS.feature.main.MenuBottomSheet
+import com.uber.autodispose.android.lifecycle.autoDisposable
 import dev.octoshrimpy.quik.R
 import dev.octoshrimpy.quik.common.Navigator
 import dev.octoshrimpy.quik.common.base.QkViewModel
@@ -557,6 +559,12 @@ class MainViewModel @Inject constructor(
                 }
                 .autoDisposable(view.scope())
                 .subscribe()
+
+        view.mainMenuIntent
+            .autoDisposable(view.scope())
+            .subscribe{
+                view.showMainMenu()
+            }
     }
 
 }

@@ -32,7 +32,7 @@
     <color name="backgroundLight">#FFFFFF</color>
     <color name="backgroundDark">#192025</color>
 
-    <color name="textPrimary">#49555F</color>
+    <color name="textPrimary">#202124</color>
     <color name="textPrimaryDisabled">#4C49555F</color>
     <color name="textSecondary">#70808D</color>
     <color name="textSecondaryDisabled">#4C70808D</color>
@@ -72,6 +72,9 @@
 
     <!-- This colour should only ever be used for attrs with the tools tag -->
     <color name="tools_theme">#00838F</color>
+
+    <!-- Menu -->
+    <color name="colorMenuSerialBackground">#D9DBDC</color>
 
     <array name="random_colors">
         <item>#06C9AF</item>
