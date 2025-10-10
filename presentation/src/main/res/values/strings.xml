@@ -567,4 +567,5 @@
     <string name="stt_toast_extra_prompt">Speak your message</string>
     <string name="title">Messages</string>
     <string name="main_menu_search">Search</string>
+    <string name="menu">Menu</string>
 </resources>

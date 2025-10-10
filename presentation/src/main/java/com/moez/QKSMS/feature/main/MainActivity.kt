@@ -146,7 +146,6 @@ class MainActivity : QkThemedActivity(), MainView {
         }
 
         toggle.syncState()
-        toggle.isDrawerIndicatorEnabled = false
         if(toggle.isDrawerIndicatorEnabled){
             toolbar.setNavigationOnClickListener {
                 dismissKeyboard()
@@ -354,12 +353,20 @@ class MainActivity : QkThemedActivity(), MainView {
     }
 
     override fun showBackButton(show: Boolean) {
+        if (show) {
+            toggle.isDrawerIndicatorEnabled = true   // enable toggle (shows hamburger/back arrow)
+        } else {
+            toggle.isDrawerIndicatorEnabled = false   // disable toggle
+        }
+
         toggle.onDrawerSlide(drawer, if (show) 1f else 0f)
+
         toggle.drawerArrowDrawable.color = when (show) {
             true -> resolveThemeColor(android.R.attr.textColorSecondary)
             false -> resolveThemeColor(android.R.attr.textColorPrimary)
         }
     }
+
 
     override fun requestDefaultSms() {
         navigator.showDefaultSmsDialog(this)

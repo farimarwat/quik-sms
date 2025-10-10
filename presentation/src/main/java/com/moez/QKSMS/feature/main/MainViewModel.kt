@@ -337,6 +337,11 @@ class MainViewModel @Inject constructor(
             .subscribe { view.toggleSelectAll() }
 
         view.optionsItemIntent
+            .filter { itemId -> itemId == R.id.main_menu_search}
+            .autoDisposable(view.scope())
+            .subscribe { newState { copy(page = Searching()) } }
+
+        view.optionsItemIntent
                 .filter { itemId -> itemId == R.id.archive }
                 .withLatestFrom(view.conversationsSelectedIntent) { _, conversations ->
                     markArchived.execute(conversations)
